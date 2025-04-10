@@ -10,8 +10,7 @@ import android.widget.Toast
 class AppLaunchMonitor : AccessibilityService() {
 
     override fun onServiceConnected() {
-        Log.i("rinuuri", "Service connected")
-        Toast.makeText(this, "Service connected", Toast.LENGTH_SHORT).show()
+        Log.i("service", "Service connected")
 
         val serviceInfo = AccessibilityServiceInfo()
         serviceInfo.eventTypes = AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED
