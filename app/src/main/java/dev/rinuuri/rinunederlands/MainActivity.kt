@@ -36,7 +36,12 @@ class MainActivity : AppCompatActivity() {
                 if (pkg.applicationInfo != null && pkg.applicationInfo!!.nonLocalizedLabel != null) pkg.applicationInfo!!.nonLocalizedLabel.toString()
                 else pkg.packageName
             checkBox.textSize = 14F
-            checkBox.isChecked = false
+            checkBox.isChecked = AppLaunchMonitor.apps.contains(pkg.packageName)
+            checkBox.setOnClickListener {
+                val pkg = (it as CheckBox).text.toString()
+                if (it.isChecked) AppLaunchMonitor.apps.add(pkg)
+                else AppLaunchMonitor.apps.remove(pkg)
+            }
             scrollLayout.addView(checkBox)
         }
 

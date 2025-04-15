@@ -15,7 +15,8 @@
         <activity
             android:name=".Popup"
             android:exported="true"
-            android:theme="@style/Theme.RinuNederlands">
+            android:theme="@style/Theme.RinuNederlands"
+            android:launchMode="singleTop">
 
         </activity>
         <activity
