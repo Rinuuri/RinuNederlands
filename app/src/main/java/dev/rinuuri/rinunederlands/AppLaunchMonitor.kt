@@ -11,6 +11,7 @@ class AppLaunchMonitor : AccessibilityService() {
 
     companion object {
         val unlocked = HashMap<String, Long>()
+        var enabled = false
     }
 
     override fun onServiceConnected() {
@@ -22,6 +23,7 @@ class AppLaunchMonitor : AccessibilityService() {
         serviceInfo.feedbackType = AccessibilityServiceInfo.FEEDBACK_GENERIC
         serviceInfo.notificationTimeout = 100
         this.serviceInfo = serviceInfo
+        enabled = true
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
@@ -29,9 +31,6 @@ class AppLaunchMonitor : AccessibilityService() {
             val packageName = event.packageName.toString()
             //Toast.makeText(this, packageName, Toast.LENGTH_SHORT).show()
             if (packageName == "com.google.android.youtube") {
-                val i =unlocked[packageName].toString();
-                val t = Clock.systemUTC().millis()/1000;
-                Log.i("service", "111 $i $t")
                 if (unlocked.containsKey(packageName)
                     && unlocked[packageName]!! > Clock.systemUTC().millis()/1000) {
                     return
@@ -47,5 +46,6 @@ class AppLaunchMonitor : AccessibilityService() {
     }
 
     override fun onInterrupt() {
+        enabled = false
     }
 }

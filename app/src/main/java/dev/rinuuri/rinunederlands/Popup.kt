@@ -13,9 +13,6 @@ class Popup : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_popup)
-        // Show your window or layout here
-        // ...
-        // Get the launch intent of the target app
 
         findViewById<Button>(R.id.yes).setOnClickListener {
             findViewById<TextView>(R.id.textView).text = "Ik hou van Belgiee"
@@ -31,6 +28,8 @@ class Popup : AppCompatActivity() {
                 intent.setPackage(id)
                 intent.addCategory(Intent.CATEGORY_LAUNCHER)
                 startActivity(intent)
+                finishAffinity()
+                finish()
                 /*val launchIntent = packageManager.getLaunchIntentForPackage(id);
                 if (launchIntent != null) {
                     launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
