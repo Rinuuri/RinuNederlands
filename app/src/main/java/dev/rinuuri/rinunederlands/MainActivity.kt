@@ -1,6 +1,7 @@
 package dev.rinuuri.rinunederlands
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
@@ -51,10 +52,10 @@ class MainActivity : AppCompatActivity() {
             checkBox.textSize = 14F
             checkBox.isChecked = AppLaunchMonitor.apps.contains(pkg.packageName)
             checkBox.setOnClickListener {
-                val pkg = (it as CheckBox).text.toString()
-                if (it.isChecked) AppLaunchMonitor.apps.add(pkg)
-                else AppLaunchMonitor.apps.remove(pkg)
-            }
+                //val pkg = (it as CheckBox).text.toString()
+                if ((it as CheckBox).isChecked) AppLaunchMonitor.apps.add(pkg.packageName)
+                else AppLaunchMonitor.apps.remove(pkg.packageName)
+                }
             if (pkg.applicationInfo != null){
                 val iv = ImageView(this)
                 iv.setImageDrawable(pkg.applicationInfo!!.loadIcon(packageManager))
@@ -66,7 +67,7 @@ class MainActivity : AppCompatActivity() {
             layout.addView(checkBox)
             //scrollLayout.addView(LinearLayout(this, AttributeSet())
             scrollLayout.addView(layout)
-            checkBoxes.add(ViewWrapper(layout, pkg.packageName))
+            checkBoxes.add(ViewWrapper(layout, checkBox.text.toString()))
         }
 
         settings.setOnClickListener {
