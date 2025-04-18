@@ -4,16 +4,24 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
+import java.util.HashMap
 
 
 class MainActivity : AppCompatActivity() {
+
+    private val checkBoxes = ArrayList<CheckBox>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -43,19 +51,20 @@ class MainActivity : AppCompatActivity() {
                 else AppLaunchMonitor.apps.remove(pkg)
             }
             scrollLayout.addView(checkBox)
+            checkBoxes.add(checkBox)
         }
 
+        settings.setOnClickListener {
+            val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
 
-
-        //settings.isActivated = false
-        //if (AppLaunchMonitor.enabled) {
-        //    settings.isActivated = false
-        //} else {
-            settings.setOnClickListener {
-                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
+        findViewById<EditText>(R.id.search).addTextChangedListener {
+            val query = it.toString();
+            for (cb in checkBoxes) {
+                cb.isVisible = cb.text.contains(query, ignoreCase = true)
             }
-        //}
+        }
     }
 }
