@@ -14,10 +14,6 @@ class Popup : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_popup)
 
-        findViewById<Button>(R.id.yes).setOnClickListener {
-            findViewById<TextView>(R.id.textView).text = "Ik hou van Belgiee"
-        }
-
         findViewById<Button>(R.id.open).setOnClickListener {
             val id = intent.extras?.getString("package_id")
             if (id != null) {
