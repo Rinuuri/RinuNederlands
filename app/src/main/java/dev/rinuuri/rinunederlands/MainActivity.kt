@@ -1,7 +1,6 @@
 package dev.rinuuri.rinunederlands
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
@@ -18,6 +17,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
+import dev.rinuuri.rinunederlands.data.AppList
 
 
 class MainActivity : AppCompatActivity() {
@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppList.load(this)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -50,11 +51,11 @@ class MainActivity : AppCompatActivity() {
                 if (pkg.applicationInfo != null) pkg.applicationInfo!!.loadLabel(packageManager)
                 else pkg.packageName
             checkBox.textSize = 14F
-            checkBox.isChecked = AppLaunchMonitor.apps.contains(pkg.packageName)
+            checkBox.isChecked = AppList.apps.contains(pkg.packageName)
             checkBox.setOnClickListener {
                 //val pkg = (it as CheckBox).text.toString()
-                if ((it as CheckBox).isChecked) AppLaunchMonitor.apps.add(pkg.packageName)
-                else AppLaunchMonitor.apps.remove(pkg.packageName)
+                if ((it as CheckBox).isChecked) AppList.apps.add(pkg.packageName)
+                else AppList.apps.remove(pkg.packageName)
                 }
             if (pkg.applicationInfo != null){
                 val iv = ImageView(this)
@@ -77,11 +78,17 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<EditText>(R.id.search).addTextChangedListener {
-            val query = it.toString();
+            val query = it.toString()
             for (cb in checkBoxes) {
                 cb.view.isVisible = cb.pkg.contains(query, ignoreCase = true)
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        AppList.save(this)
+
     }
 }
 
