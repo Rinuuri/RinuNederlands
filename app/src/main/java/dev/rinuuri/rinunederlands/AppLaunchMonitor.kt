@@ -48,4 +48,8 @@ class AppLaunchMonitor : AccessibilityService() {
     override fun onInterrupt() {
         enabled = false
     }
+
+    override fun onDestroy() {
+        enabled = false
+    }
 }

@@ -25,6 +25,12 @@ class MainActivity : AppCompatActivity() {
     private val checkBoxes = ArrayList<ViewWrapper>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (!AppLaunchMonitor.enabled) {
+            val intent = Intent(this, EnableServiceActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
         super.onCreate(savedInstanceState)
         AppList.load(this)
         enableEdgeToEdge()
@@ -34,7 +40,6 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        val settings = findViewById<Button?>(R.id.openSettings)
 
         val packages = packageManager.getInstalledPackages(0)
 
@@ -66,15 +71,8 @@ class MainActivity : AppCompatActivity() {
                 layout.addView(iv)
             }
             layout.addView(checkBox)
-            //scrollLayout.addView(LinearLayout(this, AttributeSet())
             scrollLayout.addView(layout)
             checkBoxes.add(ViewWrapper(layout, checkBox.text.toString()))
-        }
-
-        settings.setOnClickListener {
-            val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
         }
 
         findViewById<EditText>(R.id.search).addTextChangedListener {
@@ -83,6 +81,16 @@ class MainActivity : AppCompatActivity() {
                 cb.view.isVisible = cb.pkg.contains(query, ignoreCase = true)
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (!AppLaunchMonitor.enabled) {
+            val intent = Intent(this, EnableServiceActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
     }
 
     override fun onDestroy() {

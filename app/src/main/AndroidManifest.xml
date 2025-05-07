@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
 
     <application
@@ -15,14 +16,14 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.RinuNederlands"
         tools:targetApi="31">
-
+        <activity
+            android:name=".EnableServiceActivity"
+            android:exported="false" />
         <activity
             android:name=".Popup"
             android:exported="true"
-            android:theme="@style/Theme.RinuNederlands"
-            android:launchMode="singleTop">
-        </activity>
-
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.RinuNederlands"></activity>
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -30,6 +31,7 @@
             android:theme="@style/Theme.RinuNederlands">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -37,15 +39,17 @@
         <service
             android:name=".AppLaunchMonitor"
             android:enabled="true"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:exported="true"
             android:label="@string/accessibility_service_description"
-            android:exported="true">
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>
+
             <meta-data
                 android:name="android.accessibilityservice"
                 android:resource="@xml/accessibility_service_config" />
         </service>
     </application>
+
 </manifest>
