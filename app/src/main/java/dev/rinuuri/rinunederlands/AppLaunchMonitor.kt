@@ -29,14 +29,12 @@ class AppLaunchMonitor : AccessibilityService() {
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             val packageName = event.packageName.toString()
-            //Toast.makeText(this, packageName, Toast.LENGTH_SHORT).show()
             if (packageName in AppList.apps) {
                 if (unlocked.containsKey(packageName)
                     && unlocked[packageName]!! > Clock.systemUTC().millis()/1000) {
                     return
                 }
 
-                // Launch your own activity instead
                 val intent = Intent(this, Popup::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 intent.putExtra("package_id",packageName)
