@@ -18,6 +18,8 @@ class Repository {
             if (enabled) apps.add(app)
             else apps.remove(app)
             saveEnabledApps(context, apps)
+            Log.i("111app",enabled.toString())
+            for (a in apps) Log.i("111app",a)
         }
 
         fun isAppEnabled(app: String): Boolean = apps.contains(app)

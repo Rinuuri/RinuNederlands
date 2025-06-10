@@ -27,6 +27,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel;
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
         if (!AppLaunchMonitor.enabled) {
             val intent = Intent(this, EnableServiceActivity::class.java)
             startActivity(intent)
@@ -34,15 +36,13 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        enableEdgeToEdge()
         val instance = this;
-        val scrollLayout = findViewById<LinearLayout>(R.id.scrollayout)
-        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        val scrollLayout = findViewById<LinearLayout>(R.id.scrollayout)
 
         lifecycleScope.launch(Dispatchers.Default) {
             viewModel.simpleFlow.collect { it ->
-                Log.i("app", it.label.toString())
                 val layout = LinearLayout(instance)
                 layout.setLayoutParams(LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
                 layout.orientation = LinearLayout.HORIZONTAL
@@ -51,25 +51,23 @@ class MainActivity : AppCompatActivity() {
                 checkBox.text = it.label
                 checkBox.textSize = 14F
                 checkBox.isChecked = it.enabled
-                val label = it.label
+                val pkg = it.packageName
                 checkBox.setOnClickListener {
-                    (it as CheckBox).isChecked = !(it.isChecked)
-                    Repository.setAppEnabled(label.toString(), it.isChecked, instance)
+                    Repository.setAppEnabled(pkg, (it as CheckBox).isChecked, instance)
+
                 }
                 val iv = ImageView(instance)
                 iv.setImageDrawable(it.icon)
                 val params = ViewGroup.LayoutParams(130, 130)
                 iv.setLayoutParams(params)
                 iv.setPadding(0, 4,0,4)
-                Log.i("eee", layout.toString())
                 layout.addView(iv)
                 layout.addView(checkBox)
-                scrollLayout.addView(layout)
                 checkBoxes.add(ViewWrapper(layout, checkBox.text.toString()))
+                launch(Dispatchers.Main) { scrollLayout.addView(layout) }
             }
         }
 
-        setContentView(R.layout.activity_main)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)

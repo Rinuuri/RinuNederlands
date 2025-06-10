@@ -14,18 +14,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val simpleFlow: Flow<Entry> = flow {
         val packages = application.packageManager.getInstalledPackages(0)
         Repository.loadEnabledApps(application)
-        Log.i("app", "run")
         for (pkg in packages) {
-            Log.i("app", "package")
             if (pkg.applicationInfo == null)
                 continue
-            Log.i("app", "passed")
             val label =  pkg.applicationInfo!!.loadLabel(application.packageManager)
             emit(Entry(
                 pkg.applicationInfo!!.loadIcon(application.packageManager),
                 label,
-                Repository.isAppEnabled(label.toString())
-            ))
+                Repository.isAppEnabled(label.toString()),
+                pkg.packageName)
+            )
         }
     }
 
@@ -34,7 +32,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         return (ai.flags and mask) == 0
     }
 
-    data class Entry(val icon: Drawable, val label: CharSequence, val enabled: Boolean)
+    data class Entry(val icon: Drawable, val label: CharSequence, val enabled: Boolean, val packageName: String)
 
     override fun onCleared() {
         Repository.saveEnabledApps(getApplication(), Repository.apps)
