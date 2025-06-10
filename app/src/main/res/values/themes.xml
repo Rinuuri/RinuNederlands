@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="Theme.RinuNederlands" parent="Theme.AppCompat.NoActionBar" />
+    <style name="Theme.RinuNederlands" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:background">#0d0D0D</item>
+        <item name="android:windowActivityTransitions">false</item>
+        <item name="android:button">@drawable/button_background</item>
+    </style>
+    <style name="ButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/button_background</item>
+    </style>
 </resources>

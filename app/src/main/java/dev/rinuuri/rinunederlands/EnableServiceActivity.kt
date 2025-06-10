@@ -11,6 +11,7 @@ import androidx.core.view.WindowInsetsCompat
 
 class EnableServiceActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+
         overridePendingTransition(0, 0)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -30,6 +31,7 @@ class EnableServiceActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+
         if (AppLaunchMonitor.enabled) {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)

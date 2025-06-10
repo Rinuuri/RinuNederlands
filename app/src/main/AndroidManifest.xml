@@ -23,7 +23,7 @@
             android:name=".Popup"
             android:exported="true"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.RinuNederlands"></activity>
+            android:theme="@style/Theme.RinuNederlands"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

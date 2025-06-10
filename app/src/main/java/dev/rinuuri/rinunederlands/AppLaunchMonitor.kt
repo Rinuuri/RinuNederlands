@@ -5,7 +5,6 @@ import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.Intent
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
-import dev.rinuuri.rinunederlands.data.AppList
 import java.time.Clock
 
 class AppLaunchMonitor : AccessibilityService() {
@@ -29,7 +28,7 @@ class AppLaunchMonitor : AccessibilityService() {
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             val packageName = event.packageName.toString()
-            if (packageName in AppList.apps) {
+            if (packageName in Repository.apps) {
                 if (unlocked.containsKey(packageName)
                     && unlocked[packageName]!! > Clock.systemUTC().millis()/1000) {
                     return
@@ -44,7 +43,7 @@ class AppLaunchMonitor : AccessibilityService() {
     }
 
     override fun onInterrupt() {
-        enabled = false
+        TODO("Not yet implemented")
     }
 
     override fun onDestroy() {

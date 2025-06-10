@@ -1,12 +1,10 @@
 package dev.rinuuri.rinunederlands
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
@@ -17,62 +15,65 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
-import dev.rinuuri.rinunederlands.data.AppList
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
 
     private val checkBoxes = ArrayList<ViewWrapper>()
+    private lateinit var viewModel: MainViewModel;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         if (!AppLaunchMonitor.enabled) {
             val intent = Intent(this, EnableServiceActivity::class.java)
             startActivity(intent)
             finish()
+            return
         }
 
-        super.onCreate(savedInstanceState)
-        AppList.load(this)
         enableEdgeToEdge()
+        val instance = this;
+        val scrollLayout = findViewById<LinearLayout>(R.id.scrollayout)
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+
+        lifecycleScope.launch(Dispatchers.Default) {
+            viewModel.simpleFlow.collect { it ->
+                Log.i("app", it.label.toString())
+                val layout = LinearLayout(instance)
+                layout.setLayoutParams(LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
+                layout.orientation = LinearLayout.HORIZONTAL
+
+                val checkBox = CheckBox(instance)
+                checkBox.text = it.label
+                checkBox.textSize = 14F
+                checkBox.isChecked = it.enabled
+                val label = it.label
+                checkBox.setOnClickListener {
+                    (it as CheckBox).isChecked = !(it.isChecked)
+                    Repository.setAppEnabled(label.toString(), it.isChecked, instance)
+                }
+                val iv = ImageView(instance)
+                iv.setImageDrawable(it.icon)
+                val params = ViewGroup.LayoutParams(130, 130)
+                iv.setLayoutParams(params)
+                iv.setPadding(0, 4,0,4)
+                Log.i("eee", layout.toString())
+                layout.addView(iv)
+                layout.addView(checkBox)
+                scrollLayout.addView(layout)
+                checkBoxes.add(ViewWrapper(layout, checkBox.text.toString()))
+            }
+        }
+
         setContentView(R.layout.activity_main)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
-        }
-
-        val packages = packageManager.getInstalledPackages(0)
-
-        @SuppressLint("MissingInflatedId")
-        val scrollLayout= findViewById<LinearLayout>(R.id.scrollayout)
-
-        for (pkg in packages) {
-            val layout = LinearLayout(this)
-            layout.setLayoutParams(LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
-            layout.orientation = LinearLayout.HORIZONTAL
-
-            val checkBox = CheckBox(this)
-            checkBox.text =
-                if (pkg.applicationInfo != null) pkg.applicationInfo!!.loadLabel(packageManager)
-                else pkg.packageName
-            checkBox.textSize = 14F
-            checkBox.isChecked = AppList.apps.contains(pkg.packageName)
-            checkBox.setOnClickListener {
-                //val pkg = (it as CheckBox).text.toString()
-                if ((it as CheckBox).isChecked) AppList.apps.add(pkg.packageName)
-                else AppList.apps.remove(pkg.packageName)
-                }
-            if (pkg.applicationInfo != null){
-                val iv = ImageView(this)
-                iv.setImageDrawable(pkg.applicationInfo!!.loadIcon(packageManager))
-                val params = ViewGroup.LayoutParams(130, 130)
-                iv.setLayoutParams(params)
-                iv.setPadding(0, 4,0,4)
-                layout.addView(iv)
-            }
-            layout.addView(checkBox)
-            scrollLayout.addView(layout)
-            checkBoxes.add(ViewWrapper(layout, checkBox.text.toString()))
         }
 
         findViewById<EditText>(R.id.search).addTextChangedListener {
@@ -90,12 +91,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        AppList.save(this)
 
     }
 }

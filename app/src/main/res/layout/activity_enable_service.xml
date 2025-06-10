@@ -5,29 +5,30 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00000000"
-    android:backgroundTint="#00000000"
+    android:background="#0D0D0D"
     tools:context=".EnableServiceActivity">
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="360dp"
-        android:layout_height="wrap_content"
-        android:text="The app needs an to have the accessability service enabled in order to monitor your phone activity, pleace go to settings and enable it for this app to function \n\n The app does not collect any data or spy on you in any way"
+        android:layout_width="312dp"
+        android:layout_height="91dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="The app needs an to have the accessability service enabled in order to monitor your phone activity.\n\n The app does not collect any data or spy on you in any way"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.313"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.499" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/open_settings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Instellingen openen"
+        android:layout_marginTop="40dp"
+        android:width="200dp"
+        android:background="@drawable/button_background"
+        android:text="Instellingen"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
