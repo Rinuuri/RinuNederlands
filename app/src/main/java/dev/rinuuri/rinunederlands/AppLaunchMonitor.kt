@@ -14,6 +14,10 @@ class AppLaunchMonitor : AccessibilityService() {
         var enabled = false
     }
 
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        return START_STICKY
+    }
+
     override fun onServiceConnected() {
         Log.i("service", "Service connected")
         val serviceInfo = AccessibilityServiceInfo()
@@ -29,6 +33,7 @@ class AppLaunchMonitor : AccessibilityService() {
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             val packageName = event.packageName.toString()
             if (packageName in Repository.apps) {
+                Log.i("package", packageName)
                 if (unlocked.containsKey(packageName)
                     && unlocked[packageName]!! > Clock.systemUTC().millis()/1000) {
                     return
@@ -43,7 +48,7 @@ class AppLaunchMonitor : AccessibilityService() {
     }
 
     override fun onInterrupt() {
-        TODO("Not yet implemented")
+        enabled = false
     }
 
     override fun onDestroy() {

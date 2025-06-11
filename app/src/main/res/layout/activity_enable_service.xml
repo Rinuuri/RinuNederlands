@@ -10,16 +10,18 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="312dp"
-        android:layout_height="91dp"
+        android:layout_width="310dp"
+        android:layout_height="131dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:text="The app needs an to have the accessability service enabled in order to monitor your phone activity.\n\n The app does not collect any data or spy on you in any way"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.509" />
 
     <Button
         android:id="@+id/open_settings"

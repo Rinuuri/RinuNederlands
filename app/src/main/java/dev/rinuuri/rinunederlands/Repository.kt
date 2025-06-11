@@ -17,14 +17,12 @@ class Repository {
         fun setAppEnabled(app: String, enabled: Boolean, context: Context) {
             if (enabled) apps.add(app)
             else apps.remove(app)
-            saveEnabledApps(context, apps)
-            Log.i("111app",enabled.toString())
-            for (a in apps) Log.i("111app",a)
+            saveEnabledApps(context)
         }
 
         fun isAppEnabled(app: String): Boolean = apps.contains(app)
 
-        fun saveEnabledApps(context: Context, apps: HashSet<String>) {
+        fun saveEnabledApps(context: Context) {
             val file = File(context.filesDir, "apps.json")
             try {
                 val fos = FileOutputStream(file)
@@ -39,6 +37,7 @@ class Repository {
             val file = File(context.filesDir, "apps.json")
             if (!(file.exists() && file.length() > 0)) {
                 file.createNewFile()
+                Log.i("info", "newfile")
                 return
             }
             try {
@@ -46,7 +45,9 @@ class Repository {
                 val buffer = ByteArray(file.length().toInt())
                 fis.read(buffer)
                 fis.close()
-                apps = gson.fromJson(String(buffer),
+                val str = String(buffer)
+                Log.i("info", "Loaded $str")
+                apps = gson.fromJson(str,
                     object : TypeToken<HashSet<String>>() {}.type
                 ) as HashSet<String>
             } catch (e: Exception) {

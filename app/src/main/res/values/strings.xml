@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">RinuNederlands</string>
-    <string name="accessibility_service_description">App monitoring service</string>
+    <string name="accessibility_service_description">RinuNederlands service</string>
 </resources>

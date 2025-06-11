@@ -14,7 +14,6 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="Zoeken"
-        android:inputType="text"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         app:layout_constraintEnd_toEndOf="parent"

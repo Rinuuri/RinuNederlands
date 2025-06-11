@@ -43,6 +43,10 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch(Dispatchers.Default) {
             viewModel.simpleFlow.collect { it ->
+                if (it == null) {
+
+                    return@collect
+                }
                 val layout = LinearLayout(instance)
                 layout.setLayoutParams(LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
                 layout.orientation = LinearLayout.HORIZONTAL
@@ -54,7 +58,6 @@ class MainActivity : AppCompatActivity() {
                 val pkg = it.packageName
                 checkBox.setOnClickListener {
                     Repository.setAppEnabled(pkg, (it as CheckBox).isChecked, instance)
-
                 }
                 val iv = ImageView(instance)
                 iv.setImageDrawable(it.icon)
